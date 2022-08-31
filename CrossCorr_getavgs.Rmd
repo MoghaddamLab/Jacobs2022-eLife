@@ -1,0 +1,71 @@
+---
+title: "Crosscorr trial summaries"
+author: "Dave J"
+date: "4/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r packages, warning=FALSE}
+#some packages to load. one may need to install them into r first if you dont have them
+library(dplyr)
+library(tidyr)
+library(reshape2)
+#check the directory you are in
+getwd()
+```
+
+
+# Load the Cross correlation functions  for reward and action
+```{r}
+CrossdataAction=read.csv("../Action-FullCrossCorr.csv",header=FALSE) %>% select (-c(V1))
+Crossdatafood=read.csv("../Reward-FullCrossCorr.csv",header=FALSE) %>% select (-c(1))
+```
+
+#action epoch processing
+```{r}
+Crossdata_mean=CrossdataAction %>% # get data
+  # filter out subjects excluded from VTA, filter outliers, filter non shock trials (change to one with shock data if needed), select out the unneeded columns after 
+  filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0) %>% filter(V12==0) %>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% 
+  #group by session and block and get the statistic (mean here)
+  group_by(V7,V10) %>% summarise_all(mean)%>% mutate(stattype="mean") %>% 
+  #reshape df for later
+  relocate(stattype,.after =V10 ) %>% ungroup() 
+
+# same as above but to get the SD and sample size
+Crossdata_sd=CrossdataAction%>%filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0)  %>% filter(V12==0)%>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% group_by(V7,V10)  %>%  summarise_all(sd) %>% mutate(stattype="SD")%>% relocate(stattype,.after =V10 )%>% ungroup()
+Crossdata_N=CrossdataAction%>%filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0) %>% filter(V12==0) %>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% group_by(V7,V10)  %>%  count() %>% mutate(stattype="count")%>% relocate(stattype,.after =V10 )%>% ungroup() %>% rename(V14=n)
+
+#combine mean, sd, and sample size dataframes
+mergeall=bind_rows(Crossdata_mean, Crossdata_sd,Crossdata_N)%>% rename(session=V7, block=V10)
+
+#save as a csv
+write.csv(mergeall,'AvgCCF-Action.csv')
+```
+
+#same as action processing above but for the reward data
+```{r}
+Crossdatafood_mean=Crossdatafood%>%filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0) %>% filter(V12==0)%>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% group_by(V7,V10) %>% summarise_all(mean)%>% mutate(stattype="mean") %>% relocate(stattype,.after =V10 ) %>% ungroup()
+Crossdatafood_sd=Crossdatafood%>%filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0)  %>% filter(V12==0)%>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% group_by(V7,V10)  %>%  summarise_all(sd) %>% mutate(stattype="SD")%>% relocate(stattype,.after =V10 )%>% ungroup()
+Crossdatafood_N=Crossdatafood%>%filter(!V8 %in% c("S283","S318","S321"))%>% filter(V13==0) %>% filter(V12==0) %>% select (-c(1,2,3,4,5,7,8,10,11,12)) %>% group_by(V7,V10)  %>%  count() %>% mutate(stattype="count")%>% relocate(stattype,.after =V10 )%>% ungroup() %>% rename(V14=n)
+
+mergeall=bind_rows(Crossdatafood_mean, Crossdatafood_sd,Crossdatafood_N)%>% rename(session=V7, block=V10)
+
+
+write.csv(mergeall,'AvgCCF-Reward.csv')
+```
+
+
+
+
+
+
+
+
+
+
+
