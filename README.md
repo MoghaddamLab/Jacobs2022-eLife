@@ -6,10 +6,10 @@ Note the source data for figures can be found through the Dryad repository - doi
 ## Required packages
 
 
-For python (v3+) scripts - many of these will be included in your base environment if you use anaconda:
+For *python* (v3+) scripts - many of these will be included in your base environment if you use anaconda:
   - numpy, pandas, os, csv, glob, re, math, scipy, mapplotlib, pylab, datetime
 
-For the one R code - 
+For the one *R* code - 
   - dplyr, tidyr, reshape2
 
 
@@ -19,7 +19,7 @@ For the one R code -
 
 **CCF_processor**- used to get  peak (either min peak ,max peak, or absolute peak), n, and SD for an average cross correlation function. Note this is not used until data are already processed using the **Runcrosscorr_alltrials** and **CrossCorr_getavgs codes**.
 
-**CrossCorr_getavgs** - the only R code which is a quick way to get the average of all cross correlation function over all trials. This could be done in Python obviously. But at the time of writing I was working more in R. Takes a csv where each column is a time-lag value in a cross correlation function and each row is a trial. 
+**CrossCorr_getavgs** - the only *R* code which is a quick way to get the average of all cross correlation function over all trials. This could be done in Python obviously. But at the time of writing I was working more in R. Takes a csv where each column is a time-lag value in a cross correlation function and each row is a trial. 
 
 **FR1_NPM_gob** and **JPTask_NPM_gob** - these codes do much of the heavy lifting in terms of analyzing fiber photometry data with some slight differences in things because the FR1 data has to be parsed differently than the PRT data (e.g. shock trials are only in the PRT). These take in both timestamps from bonsai and raw bonsai pixel value readings and parses the data based on each trial. Will also do all the rescaling, delta-F calculations and peri event z scores to get an average for each subjects for each session and block. This is able to parse all this by using the csv's returned from the **BehavioralProcessing** code that contains the metadata about each trial. 
 
