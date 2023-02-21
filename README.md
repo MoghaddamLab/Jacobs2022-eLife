@@ -7,7 +7,7 @@ Note the source data for figures can be found through the Dryad repository - doi
 
 
 For *python* (v3+) scripts - many of these will be included in your base environment if you use anaconda:
-  - numpy, pandas, os, csv, glob, re, math, scipy, mapplotlib, pylab, datetime
+  - numpy, pandas, os, csv, glob, re, math, scipy, matplotlib, pylab, datetime
 
 For the one *R* code - 
   - dplyr, tidyr, reshape2
